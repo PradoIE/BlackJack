@@ -22,10 +22,10 @@ Luego de que se verifica el ganador se puede empezar otra mano y empezar nuevame
 
 Intrucciones para ejecutar:
 
-El archivo blackjack_GUI.py debe estar al mismo nivel que una carpeta llamada "imagenes", donde está la imagen de fondo y otra carpeta llamada "cartas",
-donde están todas las cartas que se usan en el juego. 
+El archivo blackjack_GUI.py debe estar al mismo nivel que una carpeta llamada "imagenes" y el archivo "Puntuaciones.txt", donde está la imagen de fondo y otra carpeta llamada "cartas", donde están todas las cartas que se usan en el juego. 
 El directorio debe tener esta estructura: 
   blackjack_GUI.py
+  Puntuaciones.txt
   imagenes
     fondo.jpg
     cartas
