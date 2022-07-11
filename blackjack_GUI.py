@@ -1,12 +1,88 @@
 #! /usr/bin/python3
 import pygame
-#  random
+import time
 pygame.init()
 
 white = (255, 255, 255)
 black = (0, 0, 0)
 gray = (150, 150, 150)
 
+
+class Play(object):
+
+    def __init__(self, screen):
+        self.screen = screen
+        self.fichas_total = 500
+        self.fichas_apuesta = 0
+
+    def gana_apuesta(self):
+        self.fichas_total += self.fichas_apuesta
+
+    def pierde_apuesta(self):
+        self.fichas_total -= self.fichas_apuesta
+
+    def apuesta(self):
+        self.text1('Fichas disponibles = {}'.format(self.fichas_total), 200, 300)
+        self.fichas_apuesta = int(self.game_intro())
+        return self.fichas_apuesta, self.fichas_total
+
+    def text1(self, word, x, y):
+        font = pygame.font.Font('freesansbold.ttf', 32)
+        text = font.render("{}".format(word), True, black)
+        self.screen.blit(text, (x, y))
+        pygame.display.update()
+        return self.screen.blit(text, (x, y))
+
+    def inpt(self):
+        word = ""
+        self.text1("Coloque su apuesta = ", 200, 350)  # example asking name
+        done = True
+        while done:
+            for event in pygame.event.get():
+                self.text1(word, 575, 350)
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_0:
+                        word += str(chr(event.key))
+                    if event.key == pygame.K_1:
+                        word += str(chr(event.key))
+                    if event.key == pygame.K_2:
+                        word += chr(event.key)
+                    if event.key == pygame.K_3:
+                        word += chr(event.key)
+                    if event.key == pygame.K_4:
+                        word += chr(event.key)
+                    if event.key == pygame.K_5:
+                        word += chr(event.key)
+                    if event.key == pygame.K_6:
+                        word += chr(event.key)
+                    if event.key == pygame.K_7:
+                        word += chr(event.key)
+                    if event.key == pygame.K_8:
+                        word += chr(event.key)
+                    if event.key == pygame.K_9:
+                        word += chr(event.key)
+                    if event.key == pygame.K_RETURN:
+                        done = False
+        self.text1(word, 575, 350)
+        return word
+
+    def game_intro(self):
+        intro = True
+        while intro:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        intro = False
+
+            valor_apuesta = self.inpt()
+            pygame.display.update()
+            return valor_apuesta
 
 class Boton:
     def __init__(self, text,  pos, font, bg='gray', feedback='Sin feedback'):
@@ -47,8 +123,8 @@ clock = pygame.time.Clock()
 # Se llama la imagen de fondo
 background = pygame.image.load('imagenes/fondo.jpg').convert()
 carta1 = Carta('corazon', 'clean')
-carta1.rect.x = (50)
-carta1.rect.y = (600)
+carta1.rect.x = 50
+carta1.rect.y = 600
 
 # Se inicializan los botones del menu principal y puntuaciones más altas
 boton_iniciar = Boton(' Iniciar Juego ', (247, 100), font=50,
@@ -74,11 +150,29 @@ while True:
                 menu_prin_done = True
                 punt_done = True
                 partida_done = True
+
             if boton_iniciar.click(event):
                 print(boton_iniciar.feedback)
-                menu_prin_done = True
-                punt_done = True
-                partida_done = False
+                #########################################################################################
+                screen.blit(background, [0, 0])
+                z = True
+                while z:
+                    try:
+                        x, y = Play(screen).apuesta()
+                    except Exception:
+                        print('hola')
+                    else:
+                        if x > y:
+                            Play(screen).text1('La apuesta supera el número de fichas', 100, 500)
+                            time.sleep(2)
+                            break
+                        else:
+                            partida_done = False
+                            menu_prin_done = True
+                            punt_done = True
+                            break
+            z = False
+
             if boton_puntuaciones.click(event):
                 print(boton_puntuaciones.feedback)
                 menu_prin_done = True
@@ -133,7 +227,6 @@ while True:
         screen.blit(carta1.image, [50, 500])
         boton_finalizar.show()
         pygame.display.flip()
-
         clock.tick(60)
 
     if menu_prin_done and punt_done and partida_done:
